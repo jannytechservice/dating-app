@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\JsonResponse;
 use App\Services\ProfileService;
 use App\Http\Requests\Profile\SearchProfileRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
@@ -41,10 +42,11 @@ class ProfileController extends Controller
      */
     public function show($id)
     {
-        $profile = $this->profileService->getProfileById($id);
-        if (!$profile) {
+        try {
+            $profile = $this->profileService->getProfileById($id);
+            return JsonResponse::success('Profile retrieved successfully.', $profile, Response::HTTP_OK);
+        } catch (ModelNotFoundException $e) {
             return JsonResponse::error('Profile not found.', null, Response::HTTP_NOT_FOUND);
         }
-        return JsonResponse::success('Profile retrieved successfully.', $profile, Response::HTTP_OK);
     }
 }

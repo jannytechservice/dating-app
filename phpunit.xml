@@ -31,7 +31,7 @@
     <!-- Environment Variables -->
     <php>
         <env name="APP_ENV" value="testing"/>
-        <env name="APP_DEBUG" value="true"/>
+        <env name="APP_DEBUG" value="false"/>
         <env name="APP_KEY" value="base64:base64:oQJr4J8ZEX+ufFixMbZwybzbJRXTHCVoBTTn2PjvULo="/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
@@ -39,7 +39,9 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="DB_CONNECTION" value="mysql"/>
-        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="DB_DATABASE" value="dating_db"/>
+        <env name="DB_USERNAME" value="root"/>
+        <env name="DB_PASSWORD" value="Password123!"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="PULSE_ENABLED" value="false"/>
     </php>

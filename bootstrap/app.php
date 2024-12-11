@@ -80,11 +80,7 @@ return Application::configure(basePath: dirname(__DIR__))
             // In non-production environments, include exception details for debugging
             return JsonResponse::error(
                 $exception->getMessage(),
-                [
-                    'file' => $exception->getFile(),
-                    'line' => $exception->getLine(),
-                    'trace' => $exception->getTrace(),
-                ],
+                null,
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         });
