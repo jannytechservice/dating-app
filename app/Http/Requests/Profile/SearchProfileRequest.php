@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SeachProfileRequest extends FormRequest
+class SearchProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,6 @@ class SeachProfileRequest extends FormRequest
     {
         return [
             'query' => 'nullable|string|max:255',
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'query.string' => 'The search query must be a valid string.',
-            'query.max' => 'The search query must not exceed 255 characters.',
         ];
     }
 }
