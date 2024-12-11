@@ -14,7 +14,12 @@ class ConversationParticipantRepository implements ConversationParticipantReposi
 
     public function getParticipants(int $conversationId)
     {
-        return ConversationParticipant::where('conversation_id', $conversationId)->pluck('user_id');
+        return ConversationParticipant::where('conversation_id', $conversationId)
+        ->with('user')
+        ->get()
+        ->map(function ($participant) {
+            return $participant->user;
+        });
     }
 
     public function removeParticipant(int $conversationId, int $userId)

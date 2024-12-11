@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Conversation;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,13 +25,5 @@ class AddParticipantRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
         ];
 
-    }
-
-    public function messages()
-    {
-        return [
-            'user_id.required' => 'The user ID is required.',
-            'user_id.exists' => 'The specified user does not exist.',
-        ];
     }
 }
