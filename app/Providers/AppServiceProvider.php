@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Contracts\ConversationParticipantRepositoryInterface;
 use App\Contracts\ConversationRepositoryInterface;
 use App\Contracts\MessageRepositoryInterface;
 use App\Contracts\UserRepositoryInterface;
+use App\Repositories\ConversationParticipantRepository;
 use App\Repositories\ConversationRepository;
 use App\Repositories\MessageRepository;
 use App\Repositories\UserRepository;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(ConversationRepositoryInterface::class, ConversationRepository::class);
         $this->app->bind(MessageRepositoryInterface::class, MessageRepository::class);
+        $this->app->bind(ConversationParticipantRepositoryInterface::class, ConversationParticipantRepository::class);
     }
 
     /**
