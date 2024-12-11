@@ -14,6 +14,11 @@ class AuthService
         $this->userRepository = $userRepository;
     }
 
+    public function findByEmail(string $email)
+    {
+        return $this->userRepository->findByEmail($email);
+    }
+
     public function register(array $data)
     {
         $data['password'] = Hash::make($data['password']);
