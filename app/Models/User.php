@@ -45,4 +45,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Conversations where the user is a participant
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_participants', 'user_id', 'conversation_id');
+    }
+
+    // Messages sent by the user
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 }
