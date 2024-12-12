@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    /**
+     * @var AuthService
+     */
     protected $authService;
 
     /**
@@ -28,9 +31,11 @@ class AuthController extends Controller
      * @param RegisterRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): \Illuminate\Http\JsonResponse
     {
-        $user = $this->authService->register($request->validated());
+        /** @var array<string, string> $validatedData */
+        $validatedData = $request->validated();
+        $user = $this->authService->register($validatedData);
         return JsonResponse::success('User registered successfully', $user, Response::HTTP_CREATED);
     }
 
@@ -40,9 +45,11 @@ class AuthController extends Controller
      * @param LoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
-        $user = $this->authService->findByEmail($request['email']);
+        /** @var array<string, string> $validatedData */
+        $validatedData = $request->validated();
+        $user = $this->authService->findByEmail($validatedData['email']);
         if (!$user) {
             return JsonResponse::error(
                 'User not found.',
@@ -51,7 +58,7 @@ class AuthController extends Controller
             );
         }
 
-        $token = $this->authService->login($request->validated());
+        $token = $this->authService->login($validatedData);
 
         if (!$token) {
             return JsonResponse::error('Invalid credentials', ['password' => ['Wrong password.']], Response::HTTP_UNAUTHORIZED);

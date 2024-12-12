@@ -4,7 +4,10 @@ namespace Tests\Unit;
 
 use App\Contracts\ConversationRepositoryInterface;
 use App\Contracts\ConversationParticipantRepositoryInterface;
+use App\Models\Conversation;
+use App\Models\User;
 use App\Services\ConversationService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
 use Tests\TestCase;
@@ -31,7 +34,7 @@ class ConversationServiceTest extends TestCase
     public function test_get_conversations()
     {
         $userId = 1;
-        $conversations = ['conversation1', 'conversation2'];
+        $conversations = new Collection([Conversation::factory()->make()]);
 
         Auth::shouldReceive('id')->once()->andReturn($userId);
         $this->conversationRepositoryMock
@@ -49,7 +52,7 @@ class ConversationServiceTest extends TestCase
     {
         $userId = 1;
         $data = ['field1' => 'value1', 'field2' => 'value2'];
-        $conversation = (object)['id' => 1];
+        $conversation = Conversation::factory()->make(['id' => 1]);
 
         Auth::shouldReceive('id')->once()->andReturn($userId);
         $this->conversationRepositoryMock
@@ -92,7 +95,7 @@ class ConversationServiceTest extends TestCase
     public function test_get_participants()
     {
         $conversationId = 1;
-        $participants = ['user1', 'user2'];
+        $participants = new Collection([User::factory()->make()]);
 
         $this->participantRepositoryMock
             ->shouldReceive('getParticipants')

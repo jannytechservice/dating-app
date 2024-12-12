@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -47,15 +49,34 @@ class User extends Authenticatable
         ];
     }
 
-    // Conversations where the user is a participant
-    public function conversations()
+    /**
+     * Conversations where the user is a participant.
+     *
+     * @return BelongsToMany<Conversation, User>
+     */
+    public function conversations(): BelongsToMany
     {
-        return $this->belongsToMany(Conversation::class, 'conversation_participants', 'user_id', 'conversation_id');
+        /** @var BelongsToMany<Conversation, User> $relation */
+        $relation = $this->belongsToMany(
+            Conversation::class,
+            'conversation_participants',
+            'user_id',
+            'conversation_id'
+        );
+
+        return $relation;
     }
 
-    // Messages sent by the user
-    public function messages()
+    /**
+     * Messages sent by the user.
+     *
+     * @return HasMany<Message, User>
+     */
+    public function messages(): HasMany
     {
-        return $this->hasMany(Message::class, 'sender_id');
+        /** @var HasMany<Message, User> $relation */
+        $relation = $this->hasMany(Message::class, 'sender_id');
+
+        return $relation;
     }
 }

@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProfileController extends Controller
 {
+    /**
+     * @var ProfileService
+     */
     protected $profileService;
 
     /**
@@ -26,11 +29,12 @@ class ProfileController extends Controller
      * Search profiles by a query string.
      *
      * @param SearchProfileRequest $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function search(SearchProfileRequest $request)
+    public function search(SearchProfileRequest $request): \Illuminate\Http\JsonResponse
     {
-        $profiles = $this->profileService->searchProfiles($request->query('query', ''));
+        $query = is_string($request->query('query', '')) ? $request->query('query', '') : '';
+        $profiles = $this->profileService->searchProfiles($query);
         return JsonResponse::success('Profiles retrieved successfully.', $profiles, Response::HTTP_OK);
     }
 
@@ -38,9 +42,9 @@ class ProfileController extends Controller
      * Get a specific profile by its ID.
      *
      * @param int $id
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show($id): \Illuminate\Http\JsonResponse
     {
         try {
             $profile = $this->profileService->getProfileById($id);

@@ -4,11 +4,20 @@ namespace App\Services;
 
 use App\Contracts\ConversationRepositoryInterface;
 use App\Contracts\ConversationParticipantRepositoryInterface;
+use App\Models\Conversation;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class ConversationService
 {
+    /**
+     * @var ConversationRepositoryInterface
+     */
     protected $conversationRepository;
+    /**
+     * @var ConversationParticipantRepositoryInterface
+     */
     protected $participantRepository;
 
     /**
@@ -32,22 +41,24 @@ class ConversationService
      */
     public function getConversations()
     {
-        return $this->conversationRepository->getConversationsByUserId(Auth::id());
+        $userId = (int) Auth::id();
+        return $this->conversationRepository->getConversationsByUserId($userId);
     }
 
     /**
      * Create a new conversation and add the creator as a participant.
      *
-     * @param array $data
+     * @param array<string, int> $data
      * @return mixed
      */
     public function createConversation(array $data)
     {
+        /** @var Conversation $conversation */
         $conversation = $this->conversationRepository->createConversation($data);
 
         $this->participantRepository->addParticipant([
-            'conversation_id' => $conversation->id,
-            'user_id' => Auth::id(),
+            'conversation_id' => (int) $conversation->id,
+            'user_id' => (int) Auth::id(),
         ]);
 
         return $conversation;
@@ -72,7 +83,7 @@ class ConversationService
      * Retrieve all participants of a conversation.
      *
      * @param int $conversationId
-     * @return mixed
+     * @return Collection<int, User>
      */
     public function getParticipants(int $conversationId)
     {

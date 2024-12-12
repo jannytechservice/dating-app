@@ -3,10 +3,19 @@
 namespace App\Helpers;
 
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse as BaseJsonResponse;
 
 class JsonResponse
 {
-    public static function success(string $message, $data = null, $statusCode = Response::HTTP_OK)
+    /**
+     * Returns a success JSON response.
+     *
+     * @param string $message
+     * @param mixed|null $data
+     * @param int $statusCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function success(string $message, mixed $data = null, int $statusCode = Response::HTTP_OK): BaseJsonResponse
     {
         return response()->json([
             'status' => 'success',
@@ -16,7 +25,15 @@ class JsonResponse
         ], $statusCode);
     }
 
-    public static function error(string $message, $errors = null, $statusCode = Response::HTTP_BAD_REQUEST)
+    /**
+     * Returns an error JSON response.
+     *
+     * @param string $message
+     * @param mixed|null $errors
+     * @param int $statusCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public static function error(string $message, mixed $errors = null, int $statusCode = Response::HTTP_BAD_REQUEST): BaseJsonResponse
     {
         return response()->json([
             'status' => 'error',

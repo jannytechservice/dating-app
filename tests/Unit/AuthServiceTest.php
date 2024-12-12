@@ -32,13 +32,13 @@ class AuthServiceTest extends TestCase
             'email' => 'johndoe@example.com',
             'password' => 'password123',
         ];
-
+        $user = User::factory()->make($data);
         $this->userRepository->shouldReceive('createUser')
             ->once()
             ->with(Mockery::on(function ($input) {
                 return isset($input['password']) && Hash::check('password123', $input['password']);
             }))
-            ->andReturn((object) $data);
+            ->andReturn($user);
 
         $result = $this->authService->register($data);
 

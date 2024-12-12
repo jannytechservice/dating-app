@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ConversationController extends Controller
 {
+    /**
+     * @var ConversationService
+     */
     protected $conversationService;
 
     /**
@@ -25,9 +28,9 @@ class ConversationController extends Controller
     /**
      * List all conversations for the authenticated user.
      *
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $conversations = $this->conversationService->getConversations();
         return JsonResponse::success('Conversations retrieved successfully.', $conversations, Response::HTTP_OK);
@@ -37,11 +40,13 @@ class ConversationController extends Controller
      * Create a new conversation.
      *
      * @param CreateConversationRequest $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(CreateConversationRequest $request)
+    public function store(CreateConversationRequest $request): \Illuminate\Http\JsonResponse
     {
-        $conversation = $this->conversationService->createConversation($request->validated());
+        /** @var array<string, int> $validatedData */
+        $validatedData = $request->validated();
+        $conversation = $this->conversationService->createConversation($validatedData);
         return JsonResponse::success('Conversation created successfully.', $conversation, Response::HTTP_CREATED);
     }
 
@@ -50,11 +55,13 @@ class ConversationController extends Controller
      *
      * @param AddParticipantRequest $request
      * @param int $conversationId
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function addParticipant(AddParticipantRequest $request, $conversationId)
+    public function addParticipant(AddParticipantRequest $request, $conversationId): \Illuminate\Http\JsonResponse
     {
-        $this->conversationService->addParticipant($conversationId, $request->validated()['user_id']);
+        /** @var array<string, int> $validatedData */
+        $validatedData = $request->validated();
+        $this->conversationService->addParticipant($conversationId, $validatedData['user_id']);
         return JsonResponse::success('Participant added successfully.', null, Response::HTTP_OK);
     }
 
@@ -63,11 +70,13 @@ class ConversationController extends Controller
      *
      * @param AddParticipantRequest $request
      * @param int $conversationId
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function removeParticipant(AddParticipantRequest $request, $conversationId)
+    public function removeParticipant(AddParticipantRequest $request, $conversationId): \Illuminate\Http\JsonResponse
     {
-        $this->conversationService->removeParticipant($conversationId, $request->validated()['user_id']);
+        /** @var array<string, int> $validatedData */
+        $validatedData = $request->validated();
+        $this->conversationService->removeParticipant($conversationId, $validatedData['user_id']);
         return JsonResponse::success('Participant removed successfully.', null, Response::HTTP_CREATED);
     }
 
@@ -75,16 +84,16 @@ class ConversationController extends Controller
      * Retrieve all participants of a conversation.
      *
      * @param int $conversationId
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getParticipants(int $conversationId)
+    public function getParticipants(int $conversationId): \Illuminate\Http\JsonResponse
     {
         $participants = $this->conversationService->getParticipants($conversationId);
 
         if ($participants->isEmpty()) {
-            return JsonResponse::error('No participants found for this conversation.', null, 404);
+            return JsonResponse::error('No participants found for this conversation.', null, Response::HTTP_NOT_FOUND);
         }
 
-        return JsonResponse::success('Participants retrieved successfully.', $participants);
+        return JsonResponse::success('Participants retrieved successfully.', $participants, Response::HTTP_OK);
     }
 }

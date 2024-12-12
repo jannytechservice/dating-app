@@ -6,6 +6,9 @@ use App\Contracts\UserRepositoryInterface;
 
 class ProfileService
 {
+    /**
+     * @var UserRepositoryInterface
+     */
     protected $userRepository;
 
     /**

@@ -3,7 +3,9 @@
 namespace Tests\Unit;
 
 use App\Contracts\MessageRepositoryInterface;
+use App\Models\Message;
 use App\Services\MessageService;
+use Illuminate\Database\Eloquent\Collection;
 use Mockery;
 use Tests\TestCase;
 
@@ -23,7 +25,7 @@ class MessageServiceTest extends TestCase
     public function test_get_messages()
     {
         $conversationId = 1;
-        $messages = ['message1', 'message2'];
+        $messages = new Collection([Message::factory()->make(), Message::factory()->make()]);
 
         $this->messageRepositoryMock
             ->shouldReceive('getMessagesByConversationId')

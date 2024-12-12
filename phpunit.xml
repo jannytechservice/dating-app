@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
-         verbose="true"
          stopOnFailure="false"
+         failOnRisky="true"
+         failOnWarning="true"
 >
     <!-- Test Suites -->
     <testsuites>
@@ -26,13 +27,18 @@
             <directory suffix=".php">app/Http/Middleware</directory>
             <directory suffix=".php">app/Providers</directory>
         </exclude>
+        <report>
+            <html outputDirectory="build/coverage"/>
+            <clover outputFile="build/clover.xml"/>
+            <text outputFile="build/coverage.txt"/>
+        </report>
     </coverage>
 
     <!-- Environment Variables -->
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="APP_DEBUG" value="false"/>
-        <env name="APP_KEY" value="base64:base64:oQJr4J8ZEX+ufFixMbZwybzbJRXTHCVoBTTn2PjvULo="/>
+        <env name="APP_KEY" value="base64:oQJr4J8ZEX+ufFixMbZwybzbJRXTHCVoBTTn2PjvULo="/>
         <env name="CACHE_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
@@ -45,16 +51,4 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="PULSE_ENABLED" value="false"/>
     </php>
-
-    <!-- Logging -->
-    <logging>
-        <log type="coverage-html" target="build/coverage"/>
-        <log type="coverage-xml" target="build/coverage/coverage.xml"/>
-        <log type="junit" target="build/junit.xml"/>
-    </logging>
-
-    <!-- Test Execution Settings -->
-    <extensions>
-        <extension class="PHPUnit\Extensions\Database\TestDatabase"/>
-    </extensions>
 </phpunit>

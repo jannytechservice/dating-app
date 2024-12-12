@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MessageController extends Controller
 {
+    /**
+     * @var MessageService
+     */
     protected $messageService;
 
     /**
@@ -25,9 +28,9 @@ class MessageController extends Controller
      * Get all messages for a conversation.
      *
      * @param int $conversationId
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index($conversationId)
+    public function index($conversationId): \Illuminate\Http\JsonResponse
     {
         $messages = $this->messageService->getMessages($conversationId);
 
@@ -42,9 +45,9 @@ class MessageController extends Controller
      * Send a new message within a conversation.
      *
      * @param SendMessageRequest $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(SendMessageRequest $request)
+    public function store(SendMessageRequest $request): \Illuminate\Http\JsonResponse
     {
         $message = $this->messageService->sendMessage($request->validated());
         return JsonResponse::success('Message sent successfully.', $message, Response::HTTP_CREATED);
