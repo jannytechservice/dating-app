@@ -10,6 +10,7 @@ use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ConversationService
 {
@@ -45,14 +46,14 @@ class ConversationService
     {
         $userId = (int) Auth::id();
         $key = CacheKey::userConversations($userId);
-
-        /** @var int $ttl */
-        $ttl = config('cache.ttl.medium');
+        Log::channel('info')->info("Cache checking for key: {$key}");
 
         /** @var Collection<int, Conversation> $conversations */
         $conversations = CacheHelper::cache($key, function () use ($userId) {
+            Log::channel('info')->info("Cache miss, fetching from DB...");
             return $this->conversationRepository->getConversationsByUserId($userId);
         });
+        Log::channel('info')->info("Cache returned: ", [$conversations]);
 
         return $conversations;
     }
