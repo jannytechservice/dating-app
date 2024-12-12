@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Contracts\MessageRepositoryInterface;
+use App\Helpers\CacheHelper;
+use App\Helpers\CacheKey;
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -29,19 +31,36 @@ class MessageService
      * @param int $conversationId
      * @return Collection<int, Message>
      */
-    public function getMessages(int $conversationId)
+    public function getMessages(int $conversationId): Collection
     {
-        return $this->messageRepository->getMessagesByConversationId($conversationId);
+        $key = CacheKey::conversationMessages($conversationId);
+
+        /** @var Collection<int, Message> $messages */
+        $messages = CacheHelper::cache($key, function () use ($conversationId) {
+            return $this->messageRepository->getMessagesByConversationId($conversationId);
+        });
+
+        return $messages;
     }
 
     /**
      * Send a new message within a conversation.
      *
      * @param array<string, mixed> $data
-     * @return mixed
+     * @return Message
      */
-    public function sendMessage(array $data)
+    public function sendMessage(array $data): Message
     {
-        return $this->messageRepository->createMessage($data);
+        if (!isset($data['conversation_id']) || !is_int($data['conversation_id'])) {
+            throw new \InvalidArgumentException("'conversation_id' must be an integer.");
+        }
+
+        $conversationId = $data['conversation_id'];
+        /** @var Message $message */
+        $message = $this->messageRepository->createMessage($data);
+
+        CacheHelper::forget(CacheKey::conversationMessages($conversationId));
+
+        return $message;
     }
 }

@@ -24,7 +24,7 @@ interface MessageRepositoryInterface
      * Create a new message within a conversation.
      *
      * @param array<string, mixed> $data
-     * @return mixed
+     * @return Message
      */
     public function createMessage(array $data);
 }

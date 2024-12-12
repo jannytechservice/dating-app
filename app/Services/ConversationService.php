@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Contracts\ConversationRepositoryInterface;
 use App\Contracts\ConversationParticipantRepositoryInterface;
+use App\Helpers\CacheHelper;
+use App\Helpers\CacheKey;
 use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,12 +39,22 @@ class ConversationService
     /**
      * Retrieve all conversations for the authenticated user.
      *
-     * @return mixed
+     * @return Collection<int, Conversation>
      */
-    public function getConversations()
+    public function getConversations(): Collection
     {
         $userId = (int) Auth::id();
-        return $this->conversationRepository->getConversationsByUserId($userId);
+        $key = CacheKey::userConversations($userId);
+
+        /** @var int $ttl */
+        $ttl = config('cache.ttl.medium');
+
+        /** @var Collection<int, Conversation> $conversations */
+        $conversations = CacheHelper::cache($key, function () use ($userId) {
+            return $this->conversationRepository->getConversationsByUserId($userId);
+        });
+
+        return $conversations;
     }
 
     /**
@@ -61,6 +73,8 @@ class ConversationService
             'user_id' => (int) Auth::id(),
         ]);
 
+        CacheHelper::forget(CacheKey::userConversations((int) Auth::id()));
+        
         return $conversation;
     }
 
@@ -87,7 +101,14 @@ class ConversationService
      */
     public function getParticipants(int $conversationId)
     {
-        return $this->participantRepository->getParticipants($conversationId);
+        $key = CacheKey::participants($conversationId);
+
+        /** @var Collection<int, User> $participants */
+        $participants = CacheHelper::cache($key, function () use ($conversationId) {
+            return $this->participantRepository->getParticipants($conversationId);
+        });
+        
+        return $participants;
     }
 
     /**

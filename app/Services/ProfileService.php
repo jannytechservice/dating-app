@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Contracts\UserRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
-use App\Models\User;
 
 class ProfileService
 {

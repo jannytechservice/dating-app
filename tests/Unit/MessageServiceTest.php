@@ -46,16 +46,16 @@ class MessageServiceTest extends TestCase
             'message' => 'Test message',
         ];
 
-        $createdMessage = (object) $data;
+        $message = new Message($data);
 
         $this->messageRepositoryMock
             ->shouldReceive('createMessage')
             ->once()
             ->with($data)
-            ->andReturn($createdMessage);
+            ->andReturn($message);
 
         $result = $this->messageService->sendMessage($data);
 
-        $this->assertEquals($createdMessage, $result);
+        $this->assertEquals($message, $result);
     }
 }
