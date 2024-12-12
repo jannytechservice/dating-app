@@ -1,66 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dating/Chat Application - Laravel Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+This project implements a dating/chat application with the following key features:
+- **Database schema design**: Includes tables for users, conversations, and messages.
+- **RESTful API**: Built using PHP and Laravel for handling account creation, login, profile retrieval, message sending/receiving, and conversation management.
+- **Query optimization**: Implements efficient queries for retrieving data such as profiles with the most conversations.
+- **Caching**: Uses Redis to improve the performance of frequently accessed API endpoints.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Technologies Used
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Backend**: Laravel 11
+- **Database**: MySQL for relational data storage
+- **Caching**: Redis for caching frequently accessed data
+- **Authentication**: Laravel Sanctum for secure API token-based authentication
+- **PHP**: PHP 8.2
+- **Testing**: PHPUnit for unit and feature tests
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Sections
 
-## Learning Laravel
+### 1. **Database Design and Implementation**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Users Table**: Stores user data such as name, email, and password.
+- **Conversations Table**: Stores conversation metadata between users.
+- **Messages Table**: Stores messages within a conversation, including sender, receiver, and message content.
+- **ConversationParticipant Table**: Stores the association between users and the conversations they are part of.
+- **Indexes & Constraints**: Optimized for performance with appropriate indexes and constraints to ensure data integrity.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 2. **API Development**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Account Creation + Login Endpoint**: Handles user registration and authentication.
+- **Profile Retrieval/Search Endpoint**: Allows for searching users by profile information.
+- **Message Sending/Receiving Endpoint**: Supports sending and retrieving messages, as well as fetching conversations.
 
-## Laravel Sponsors
+### 3. **Setup and Installation**
+- Clone the repository:
+    ```
+    git clone https://github.com/jannytechservice/dating-app.git
+    cd dating-app
+    ```
+- Install dependencies:
+    ```
+    composer install
+    ```
+- Set up the `.env` file:
+    ```
+    cp .env.development .env
+    ```
+- Generate application key:
+    ```
+    php artisan key:generate
+    ```
+- Configure database settings in .env:
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=your_database
+    DB_USERNAME=your_username
+    DB_PASSWORD=your_password
+    ```
+- Migrate the database:
+    ```
+    php artisan migrate
+    ```
+- Run the Laravel development server:
+    ```
+    php artisan serve
+    ```
+### 4. **Testing**
+To run the tests, execute:
+```
+composer test
+```
+### 5. **API Endpoints**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Below are the available API endpoints for interacting with the dating/chat application.
 
-### Premium Partners
+1. `/user`**
+- **Method**: `GET`
+- **Description**: Retrieves the authenticated user's details.
+- **Authentication**: true
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+2. `/register`**
+- **Method**: `POST`
+- **Description**: Registers a new user by submitting necessary details like name, email, and password.
+- **Authentication**: false
 
-## Contributing
+3. `/login`**
+- **Method**: `POST`
+- **Description**: Logs in a user and returns an authentication token to use in subsequent requests.
+- **Authentication**: false
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. `/profile/search`**
+- **Method**: `GET`
+- **Description**: Searches for user profiles based on query parameters. This allows filtering of profiles based on criteria like name, age, or location.
+- **Authentication**: true
 
-## Code of Conduct
+5. `/profile/{id}`**
+- **Method**: `GET`
+- **Description**: Retrieves a specific user’s profile by ID.
+- **Authentication**: true
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. `/profiles/popular/{count}`**
+- **Method**: `GET`
+- **Description**: Retrieves the most popular profiles based on the number of conversations.
+- **Authentication**: true
 
-## Security Vulnerabilities
+7. `/conversations`**
+- **Method**: `GET`
+- **Description**: Retrieves all conversations for the authenticated user.
+- **Authentication**: true
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+8. `/conversations`**
+- **Method**: `POST`
+- **Description**: Creates a new conversation.
+- **Authentication**: true
 
-## License
+9. `/conversations/{conversationId}/participants`**
+- **Method**: `GET`
+- **Description**: Retrieves the participants of a specific conversation.
+- **Authentication**: true
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+10. `/messages/{conversationId}`**
+- **Method**: `GET`
+- **Description**: Retrieves all messages for a specific conversation.
+- **Authentication**: true
+
+11. `/messages`**
+- **Method**: `POST`
+- **Description**: Sends a new message in a conversation.
+- **Authentication**: true
+
+12. `/conversations/{conversationId}/participants`**
+- **Method**: `POST`
+- **Description**: Adds a participant to a specific conversation.
+- **Authentication**: true
+
+13. `/conversations/{conversationId}/participants`**
+- **Method**: `DELETE`
+- **Description**: Removes a participant from a specific conversation.
+- **Authentication**: true
+
+### 6. **Docker Environment Setup**
+```
+docker-compose up -d
+```
