@@ -53,4 +53,17 @@ class ProfileController extends Controller
             return JsonResponse::error('Profile not found.', null, Response::HTTP_NOT_FOUND);
         }
     }
+
+    /**
+     * Get the top N popular profiles by conversation count.
+     *
+     * @param int $count
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPopularProfiles(int $count): \Illuminate\Http\JsonResponse
+    {
+        $profiles = $this->profileService->getPopularProfiles($count);
+
+        return JsonResponse::success('Popular profiles retrieved successfully.', $profiles, Response::HTTP_OK);
+    }
 }

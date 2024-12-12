@@ -17,6 +17,14 @@ class ConversationParticipant extends Model
     protected $fillable = ['conversation_id', 'user_id'];
 
     /**
+     * @inheritDoc
+     */
+    public static function tableName(): string
+    {
+        return 'conversation_participants';
+    }
+
+    /**
      * Conversation this participant belongs to.
      *
      * @return BelongsTo<Conversation, ConversationParticipant>

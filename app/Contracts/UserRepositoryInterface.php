@@ -42,4 +42,12 @@ interface UserRepositoryInterface
      * @return User
      */
     public function findById(int $id);
+
+    /**
+     * Get the top N users by conversation count.
+     *
+     * @param int $count
+     * @return mixed
+     */
+    public function getPopularProfiles(int $count);
 }

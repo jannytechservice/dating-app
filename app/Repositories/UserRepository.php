@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class UserRepository
@@ -57,5 +58,21 @@ class UserRepository implements UserRepositoryInterface
     public function findById(int $id): User
     {
         return User::findOrFail($id);
+    }
+
+    /**
+     * Get the top N users by conversation count.
+     *
+     * @param int $count
+     * @return Collection<int, User>
+     */
+    public function getPopularProfiles(int $count): Collection
+    {
+        return User::select('users.id', 'users.name', 'users.email', DB::raw('COUNT(cp.conversation_id) as conversation_count'))
+            ->join('conversation_participants as cp', 'users.id', '=', 'cp.user_id')
+            ->groupBy('users.id', 'users.name', 'users.email')
+            ->orderByDesc('conversation_count')
+            ->limit($count)
+            ->get();
     }
 }
