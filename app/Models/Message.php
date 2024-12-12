@@ -19,6 +19,14 @@ class Message extends Model
     protected $fillable = ['conversation_id', 'sender_id', 'message'];
 
     /**
+     * @inheritDoc
+     */
+    public static function tableName(): string
+    {
+        return 'messages';
+    }
+
+    /**
      * Conversation this message belongs to.
      *
      * @return BelongsTo<Conversation, Message>

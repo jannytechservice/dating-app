@@ -17,6 +17,14 @@ class Conversation extends Model
     protected $fillable = ['type', 'name'];
 
     /**
+     * @inheritDoc
+     */
+    public static function tableName(): string
+    {
+        return 'conversations';
+    }
+
+    /**
      * Participants in the conversation.
      *
      * @return HasMany<ConversationParticipant, Conversation>

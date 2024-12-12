@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Contracts\UserRepositoryInterface;
+use App\Models\ConversationParticipant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -68,9 +69,12 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getPopularProfiles(int $count): Collection
     {
-        return User::select('users.id', 'users.name', 'users.email', DB::raw('COUNT(cp.conversation_id) as conversation_count'))
-            ->join('conversation_participants as cp', 'users.id', '=', 'cp.user_id')
-            ->groupBy('users.id', 'users.name', 'users.email')
+        $usersTable = User::tableName();
+        $conversationParticipantsTable = ConversationParticipant::tableName();
+    
+        return User::select("$usersTable.id", "$usersTable.name", "$usersTable.email", DB::raw("COUNT($conversationParticipantsTable.conversation_id) as conversation_count"))
+            ->join("$conversationParticipantsTable as cp", "$usersTable.id", '=', 'cp.user_id')
+            ->groupBy("$usersTable.id", "$usersTable.name", "$usersTable.email")
             ->orderByDesc('conversation_count')
             ->limit($count)
             ->get();

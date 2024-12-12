@@ -27,6 +27,14 @@ class User extends Authenticatable
     ];
 
     /**
+     * @inheritDoc
+     */
+    public static function tableName(): string
+    {
+        return 'users';
+    }
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
