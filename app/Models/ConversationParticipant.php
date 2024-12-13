@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ConversationParticipant extends Model
+class ConversationParticipant extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\ConversationParticipantFactory> */
     use HasFactory;
